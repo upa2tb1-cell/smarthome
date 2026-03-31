@@ -8,6 +8,22 @@ namespace SmartHome {
 
     Acebott.LCD1602_Init()
     Acebott.RFID_init()
+        // ===== BLUETOOTH COMMAND =====
+export function onBluetoothCommand() {
+
+    bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () {
+
+        let cmd = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine))
+
+        if (cmd == "LED_ON") {
+            pins.digitalWritePin(DigitalPin.P1, 1)
+        }
+
+        if (cmd == "LED_OFF") {
+            pins.digitalWritePin(DigitalPin.P1, 0)
+        }
+    })
+}
 
     // ✅ BẮT BUỘC cho Bluetooth
     bluetooth.startUartService()
