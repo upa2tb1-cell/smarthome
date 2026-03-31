@@ -1,0 +1,12 @@
+{
+  "name": "smarthome",
+  "version": "1.0.0",
+  "description": "SmartHome microbit Bluetooth",
+  "dependencies": {
+    "core": "*",
+    "acebott": "github:ACEBOTTteam/Acebott"
+  },
+  "files": [
+    "smarthome.ts"
+  ]
+}
