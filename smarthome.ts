@@ -4,15 +4,11 @@ namespace SmartHome {
     let hum = 0
     let gas = 0
 
-    // ===== KHỞI TẠO =====
     export function init() {
         Acebott.LCD1602_Init()
         Acebott.RFID_init()
-        music.setBuiltInSpeakerEnabled(false)
-        Acebott.setLed(DigitalWritePin.P1, SwitchStatus.OFF)
-
-        // Bluetooth UART (dùng với app Acebott)
         bluetooth.startUartService()
+        Acebott.setLed(DigitalWritePin.P1, SwitchStatus.OFF)
 
         bluetooth.onBluetoothConnected(function () {
             basic.showIcon(IconNames.Yes)
@@ -23,7 +19,6 @@ namespace SmartHome {
         })
     }
 
-    // ===== DHT11 =====
     export function readDHT() {
         temp = Acebott.DHT11_getvalue(DigitalWritePin.P8, DHT11Type.Temperature_C)
         hum = Acebott.DHT11_getvalue(DigitalWritePin.P8, DHT11Type.Humidity)
@@ -37,7 +32,6 @@ namespace SmartHome {
         bluetooth.uartWriteLine("T:" + temp + " H:" + hum)
     }
 
-    // ===== GAS =====
     export function readGas() {
         gas = Acebott.MQ4_Sensor(AnalogReadPin.P2)
 
@@ -46,28 +40,24 @@ namespace SmartHome {
 
         bluetooth.uartWriteLine("G:" + gas)
 
-        if (gas >= 300) {
+        if (gas > 300) {
             music.playTone(262, 100)
         }
     }
 
-    // ===== PIR =====
     export function isMotion(): boolean {
         return Acebott.PIRMotion(DigitalPin.P0) == 1
     }
 
-    // ===== RFID =====
     export function readRFID() {
-        let id = Acebott.RFID_getID()
-        if (id != 0) {
+        if (Acebott.RFID_getID() != 0) {
             Acebott.LCD1602_ShowString(6, 1, "Hello")
             music.playTone(523, 100)
             bluetooth.uartWriteLine("RFID OK")
         }
     }
 
-    // ===== NHẬN LỆNH BLUETOOTH =====
-    export function onBluetoothCommand() {
+    export function onBluetooth() {
         bluetooth.onUartDataReceived(serial.delimiters(Delimiters.NewLine), function () {
             let cmd = bluetooth.uartReadUntil(serial.delimiters(Delimiters.NewLine))
 
@@ -80,5 +70,4 @@ namespace SmartHome {
             }
         })
     }
-
 }
