@@ -5,19 +5,19 @@ namespace SmartHome {
     let gas = 0
 
     export function init() {
-        Acebott.LCD1602_Init()
-        Acebott.RFID_init()
-        bluetooth.startUartService()
-        Acebott.setLed(DigitalWritePin.P1, SwitchStatus.OFF)
 
-        bluetooth.onBluetoothConnected(function () {
-            basic.showIcon(IconNames.Yes)
-        })
+    Acebott.LCD1602_Init()
+    Acebott.RFID_init()
 
-        bluetooth.onBluetoothDisconnected(function () {
-            basic.showIcon(IconNames.No)
-        })
-    }
+    // ✅ BẮT BUỘC cho Bluetooth
+    bluetooth.startUartService()
+    bluetooth.startDeviceInformationService()
+
+    // giúp tín hiệu mạnh hơn
+    bluetooth.setTransmitPower(7)
+
+    basic.showIcon(IconNames.Happy)
+}
 
     export function readDHT() {
         temp = Acebott.DHT11_getvalue(DigitalWritePin.P8, DHT11Type.Temperature_C)
